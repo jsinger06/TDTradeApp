@@ -11,3 +11,4 @@ Next Steps:
 		-Store to db
 	* Host on AWS
 	* Build React/React-Native front end
+	* Add automated testing
