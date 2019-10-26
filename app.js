@@ -12,7 +12,14 @@ const certificate = fs.readFileSync('./cert/certificate.pem', 'utf8');
 const credentials = {key: privateKey, cert: certificate};
 
 mongoose.Promise = global.Promise;
-mongoose.connect(config.dev.mongodb);
+mongoose.connect(config.dev.mongodb)
+    .then(() => {
+      console.log('Connected to DB');
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
 
 const app = express();
 
