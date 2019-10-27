@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8394508a-1a43-4d3a-b6ea-c319ee0a73bc" name="Default Changelist" comment="update cached token when token refresh is called.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="8394508a-1a43-4d3a-b6ea-c319ee0a73bc" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/auth/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/auth/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/quotes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/quotes/index.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -59,7 +55,7 @@
       <option name="presentableId" value="Default" />
       <updated>1572109800119</updated>
       <workItem from="1572109807210" duration="2662000" />
-      <workItem from="1572177942200" duration="5050000" />
+      <workItem from="1572177942200" duration="5338000" />
     </task>
     <task id="LOCAL-00001" summary="add endpoint for requesting quote">
       <created>1572181213745</created>
@@ -68,7 +64,14 @@
       <option name="project" value="LOCAL" />
       <updated>1572181213745</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="update cached token when token refresh is called.">
+      <created>1572203213373</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1572203213374</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

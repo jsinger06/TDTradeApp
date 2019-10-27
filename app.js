@@ -46,8 +46,8 @@ app.get('/auth/refresh', (req, res) => {
   res.end();
 });
 
-// todo: convert to query string
-app.get('/quote/:symbolList', async (req, res) => {
-    console.log(`Symbol List: ${req.params.symbolList}`);
-    quotes.requestQuote(req.params.symbolList, res);
+app.get('/quote/', (req, res) => {
+    console.log(`Symbol List: ${req.query.symbolList}`);
+    quotes.requestQuote(req.query.symbolList, res);
 });
+
