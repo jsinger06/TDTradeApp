@@ -16,12 +16,13 @@ const requestQuote = (symbols, res) => {
                 symbol: symbols //symbol hardcoded for testing - use symbols parameter
             }
         })
-        .then( async (oAuthReply) => {
+        .then( (oAuthReply) => {
             console.log(oAuthReply.data);
             res.json(oAuthReply.data);
         })
         .catch( (err) => {
             console.log(err);
+            res.send(`Error Encountered: ${err}`);
             throw err;
         });
 };

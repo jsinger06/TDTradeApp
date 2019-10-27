@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8394508a-1a43-4d3a-b6ea-c319ee0a73bc" name="Default Changelist" comment="" />
+    <list default="true" id="8394508a-1a43-4d3a-b6ea-c319ee0a73bc" name="Default Changelist" comment="update cached token when token refresh is called.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/auth/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/auth/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/quotes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/quotes/index.js" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,6 +27,7 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
   <component name="RecentsManager">
@@ -52,8 +59,16 @@
       <option name="presentableId" value="Default" />
       <updated>1572109800119</updated>
       <workItem from="1572109807210" duration="2662000" />
-      <workItem from="1572177942200" duration="2913000" />
+      <workItem from="1572177942200" duration="5050000" />
     </task>
+    <task id="LOCAL-00001" summary="add endpoint for requesting quote">
+      <created>1572181213745</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1572181213745</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -71,5 +86,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="add endpoint for requesting quote" />
+    <MESSAGE value="update cached token when token refresh is called." />
+    <option name="LAST_COMMIT_MESSAGE" value="update cached token when token refresh is called." />
   </component>
 </project>

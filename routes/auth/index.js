@@ -7,7 +7,7 @@ const config = require('../../config');
 // connect to auth collection
 const tdauths = mongoose.model('tdauths', authSchema);
 
-// object for common auth service settings
+// object for auth post request
 const options = {
     data: {
         'access_type': 'offline',
@@ -23,7 +23,7 @@ const options = {
 const requestToken = async (options) => {
     let data = querystring.stringify(options.data);
 
-    await axios
+    axios
         .request({
             url: 'https://api.tdameritrade.com/v1/oauth2/token',
             method: 'POST',
@@ -33,11 +33,16 @@ const requestToken = async (options) => {
             data: data,
         })
         .then( async (oAuthReply) => {
+            let currentTime = Date.now();
+
+            authToken.token_created = currentTime;
+            authToken.access_token = 'Bearer ' + oAuthReply.data.access_token;
+
             let writeDB = {
                 "token": '1',
                 "access_token": oAuthReply.data.access_token,
                 "refresh_token": oAuthReply.data.refresh_token,
-                'token_created_date': Date.now()
+                'token_created_date': currentTime
             };
 
             await tdauths.findOneAndUpdate({"token":"1"}, writeDB, { new: true, upsert: true});
@@ -45,8 +50,8 @@ const requestToken = async (options) => {
         .then( () => {
             console.log(`Token updated in DB`);
         })
-        .catch( (e) => {
-            console.log(e);
+        .catch( (err) => {
+            console.log(err);
         });
 };
 
@@ -81,8 +86,7 @@ const getToken = async (oAuthCode) => {
     options.data.grant_type = 'authorization_code';
     options.data.code = oAuthCode;
     await requestToken(options);
-}
-
+};
 
 //    Builds request structure for requesting a new token using a refresh token
 const refreshToken = () => {
@@ -91,7 +95,9 @@ const refreshToken = () => {
             options.data.grant_type = 'refresh_token';
             options.data.refresh_token = queryResult[0].refresh_token;
             options.data.code = '';
-            requestToken(options);
+            requestToken(options)
+                .then(() => { console.log(`Token Refreshed`); })
+                .catch( (err) => { console.log(err); })
         })
         .catch( (err) => {
             console.log(err);

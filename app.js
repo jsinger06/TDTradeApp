@@ -41,7 +41,7 @@ app.get('/auth/newtoken', (req, res) => {
 
 // Manually force token renewal
 app.get('/auth/refresh', (req, res) => {
-  console.log('refresh request');
+  console.log(`refresh request`);
   oAuthToken.refreshToken();
   res.end();
 });
