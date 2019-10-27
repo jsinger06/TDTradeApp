@@ -25,25 +25,29 @@ const app = express();
 
 // Start a secure web server and listen on port 8443
 const httpsServer = https.createServer(credentials, app);
+
+httpsServer.listen(config.PORT);
 console.log("Listening on port 8443...");
-httpsServer.listen(8443);
+
+//load access token on start up
+oAuthToken.initializeTokens();
 
 // redirect uri
-app.get('/auth/newtoken', function(req, res){
+app.get('/auth/newtoken', (req, res) => {
   console.log('New request');
   oAuthToken.getToken(req.query.code);
   res.end();
 });
 
 // Manually force token renewal
-app.get('/auth/refresh', function(req, res){
+app.get('/auth/refresh', (req, res) => {
   console.log('refresh request');
   oAuthToken.refreshToken();
   res.end();
 });
 
-//load access token on start up
-oAuthToken.initializeTokens();
-
-//testing quote request
-setTimeout(() => {quotes.requestQuote('test')}, 3000);
+// todo: convert to query string
+app.get('/quote/:symbolList', async (req, res) => {
+    console.log(`Symbol List: ${req.params.symbolList}`);
+    quotes.requestQuote(req.params.symbolList, res);
+});

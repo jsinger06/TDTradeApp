@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const {authToken} = require('../auth');
 const config = require('../../config');
 
-const requestQuote = async (symbols) => {
-    await axios
+const requestQuote = (symbols, res) => {
+    axios
         .request({
             url: 'https://api.tdameritrade.com/v1/marketdata/quotes',
             method: 'GET',
@@ -13,14 +13,16 @@ const requestQuote = async (symbols) => {
             },
             params: {
                 apikey: config.dev.acct.apikey,
-                symbol: 'GOOGL' //symbol hardcoded for testing - use symbols parameter
+                symbol: symbols //symbol hardcoded for testing - use symbols parameter
             }
         })
         .then( async (oAuthReply) => {
             console.log(oAuthReply.data);
+            res.json(oAuthReply.data);
         })
-        .catch( (e) => {
-            console.log(e);
+        .catch( (err) => {
+            console.log(err);
+            throw err;
         });
 };
 

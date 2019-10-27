@@ -10,6 +10,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
   <component name="ProjectId" id="1SkZxMbZTBMWZ6nmm6lBb5AM4oc" />
   <component name="PropertiesComponent">
@@ -51,6 +52,7 @@
       <option name="presentableId" value="Default" />
       <updated>1572109800119</updated>
       <workItem from="1572109807210" duration="2662000" />
+      <workItem from="1572177942200" duration="2913000" />
     </task>
     <servers />
   </component>
@@ -62,7 +64,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
