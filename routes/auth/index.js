@@ -21,7 +21,7 @@ const options = {
         Stores the returned Access and Refresh tokens in mongo db
         todo: Use closure instead of passing options param
 */
-const requestToken = async (options) => {
+const requestToken = async () => {
     let data = querystring.stringify(options.data);
 
     axios
@@ -86,7 +86,7 @@ const initializeTokens = () => {
 const getToken = async (oAuthCode) => {
     options.data.grant_type = 'authorization_code';
     options.data.code = oAuthCode;
-    await requestToken(options);
+    await requestToken();
 };
 
 //    Builds request structure for requesting a new token using a refresh token
@@ -96,7 +96,7 @@ const refreshToken = () => {
             options.data.grant_type = 'refresh_token';
             options.data.refresh_token = queryResult[0].refresh_token;
             options.data.code = '';
-            requestToken(options)
+            requestToken()
                 .then(() => { console.log(`Token Refreshed`); })
                 .catch( (err) => { console.log(err); })
         })
