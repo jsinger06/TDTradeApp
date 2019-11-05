@@ -19,6 +19,7 @@ const options = {
 /*
     Function for requesting a new or refreshed token
         Stores the returned Access and Refresh tokens in mongo db
+        todo: Use closure instead of passing options param
 */
 const requestToken = async (options) => {
     let data = querystring.stringify(options.data);
