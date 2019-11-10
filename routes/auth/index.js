@@ -42,7 +42,7 @@ const requestToken = async () => {
                 "_id": '1',
                 "access_token": oAuthReply.data.access_token,
                 "refresh_token": oAuthReply.data.refresh_token,
-                'token_created_date': currentTime
+                'updatedAt': currentTime
             };
 
             await tdauths.findOneAndUpdate({"_id":"1"}, writeDB, { new: true, upsert: true});
@@ -56,7 +56,7 @@ const requestToken = async () => {
 };
 
 const lookupToken = () => {
-    return tdauths.find({"_id": "1"}, 'access_token token_created_date')
+    return tdauths.find({"_id": "1"}, 'access_token updatedAt')
         .then( (queryResult) => {
             return queryResult[0];
         })
@@ -74,7 +74,7 @@ const authToken = {
 const initializeTokens = () => {
     lookupToken().then((result) => {
         authToken.access_token = 'Bearer ' + result.access_token;
-        authToken.token_created = result.token_created_date;
+        authToken.token_created = result.updatedAt;
     })
 };
 
