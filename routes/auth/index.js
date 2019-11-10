@@ -39,13 +39,13 @@ const requestToken = async () => {
             authToken.access_token = 'Bearer ' + oAuthReply.data.access_token;
 
             let writeDB = {
-                "token": '1',
+                "_id": '1',
                 "access_token": oAuthReply.data.access_token,
                 "refresh_token": oAuthReply.data.refresh_token,
                 'token_created_date': currentTime
             };
 
-            await tdauths.findOneAndUpdate({"token":"1"}, writeDB, { new: true, upsert: true});
+            await tdauths.findOneAndUpdate({"_id":"1"}, writeDB, { new: true, upsert: true});
         })
         .then( () => {
             console.log(`Token updated in DB`);
@@ -56,7 +56,7 @@ const requestToken = async () => {
 };
 
 const lookupToken = () => {
-    return tdauths.find({"token": "1"}, 'access_token token_created_date')
+    return tdauths.find({"_id": "1"}, 'access_token token_created_date')
         .then( (queryResult) => {
             return queryResult[0];
         })
@@ -90,7 +90,7 @@ const getToken = async (oAuthCode) => {
 
 //    Builds request structure for requesting a new token using a refresh token
 const refreshToken = () => {
-    tdauths.find({"token": "1"}, 'refresh_token')
+    tdauths.find({"_id": "1"}, 'refresh_token')
         .then( (queryResult) => {
             options.data.grant_type = 'refresh_token';
             options.data.refresh_token = queryResult[0].refresh_token;

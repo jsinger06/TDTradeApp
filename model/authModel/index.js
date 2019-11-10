@@ -6,20 +6,28 @@ mongoose.set('useUnifiedTopology', true);
 
 const Schema = mongoose.Schema;
 
-export const authSchema = new Schema({
-    token: {
-        type: String,
-        required: 'key'
+const authSchema = new Schema({
+    _id: {
+        type: Number,
+        required: true,
+        default: 1
     },
     access_token: {
         type: String,
-        required: 'access_token'
+        required: true
     },
     refresh_token: {
         type: String,
     },
     token_created_date: {
         type: Date,
-        default: Date.now
+        required: true,
+        default: module.exports.currentDateTime
     }
-});
+}, { _id: false });
+
+const currentDateTime = () =>{
+    return Date.now.toISOString();
+};
+
+module.exports = { authSchema, currentDateTime };
