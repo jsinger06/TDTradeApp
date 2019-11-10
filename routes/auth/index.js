@@ -11,8 +11,8 @@ const tdauths = mongoose.model('tdauths', authSchema);
 const options = {
     data: {
         'access_type': 'offline',
-        'client_id': config.dev.acct.client_id,
-        'redirect_uri': config.dev.acct.redirect_uri
+        'client_id': config.acct.client_id,
+        'redirect_uri': config.acct.redirect_uri
     }
 };
 
@@ -75,7 +75,7 @@ const initializeTokens = () => {
     lookupToken().then((result) => {
         authToken.access_token = 'Bearer ' + result.access_token;
         authToken.token_created = result.updatedAt;
-    })
+    });
 };
 
 /*
