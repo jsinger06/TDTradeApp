@@ -1,5 +1,4 @@
 const axios = require ('axios');
-const mongoose = require('mongoose');
 const {authToken} = require('../auth');
 const config = require('../../config');
 
@@ -12,13 +11,13 @@ const requestQuote = (symbols, res) => {
                 'Authorization': authToken.access_token,
             },
             params: {
-                apikey: config.dev.acct.apikey,
+                apikey: config.acct.apikey,
                 symbol: symbols //symbol hardcoded for testing - use symbols parameter
             }
         })
-        .then( (oAuthReply) => {
-            console.log(oAuthReply.data);
-            res.json(oAuthReply.data);
+        .then( (tdResponse) => {
+            console.log(tdResponse.data);
+            res.json(tdResponse.data);
         })
         .catch( (err) => {
             console.log(err);
