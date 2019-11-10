@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const oAuthToken = require('./routes/auth');
 const quotes = require('./routes/quotes');
 const config = require('./config');
+const account = require('./routes/account');
 
 //Load SSL certificate and private key from files
 const privateKey  = fs.readFileSync('./cert/key.pem', 'utf8');
@@ -12,7 +13,7 @@ const certificate = fs.readFileSync('./cert/certificate.pem', 'utf8');
 const credentials = {key: privateKey, cert: certificate};
 
 mongoose.Promise = global.Promise;
-mongoose.connect(config.dev.mongodb)
+mongoose.connect(config.mongodb)
     .then(() => {
       console.log('Connected to DB');
     })
@@ -51,3 +52,4 @@ app.get('/quote/', (req, res) => {
     quotes.requestQuote(req.query.symbolList, res);
 });
 
+setTimeout(account.getAccount, 3000);
