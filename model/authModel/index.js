@@ -22,12 +22,8 @@ const authSchema = new Schema({
     token_created_date: {
         type: Date,
         required: true,
-        default: module.exports.currentDateTime
+        default: Date.now.toISOString()
     }
 }, { _id: false });
 
-const currentDateTime = () =>{
-    return Date.now.toISOString();
-};
-
-module.exports = { authSchema, currentDateTime };
+module.exports = { authSchema };
