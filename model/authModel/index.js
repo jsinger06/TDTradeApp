@@ -19,11 +19,10 @@ const authSchema = new Schema({
     refresh_token: {
         type: String,
     },
-    token_created_date: {
+    updatedAt: {
         type: Date,
-        required: true,
-        default: Date.now.toISOString()
+        required: true
     }
-}, { _id: false });
+}, { _id: false, timestamps: true });
 
 module.exports = { authSchema };
