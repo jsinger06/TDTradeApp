@@ -16,6 +16,11 @@ const options = {
     }
 };
 
+const authToken = {
+    access_token: null,
+    updatedAt: null
+};
+
 /*
     Function for requesting a new or refreshed token
         Stores the returned Access and Refresh tokens in mongo db
@@ -35,7 +40,7 @@ const requestToken = async () => {
         .then( async (oAuthReply) => {
             let currentTime = Date.now();
 
-            authToken.token_created = currentTime;
+            authToken.updatedAt = currentTime;
             authToken.access_token = 'Bearer ' + oAuthReply.data.access_token;
 
             let writeDB = {
@@ -66,15 +71,10 @@ const lookupToken = () => {
         });
 };
 
-const authToken = {
-    access_token: null,
-    token_created: null
-};
-
 const initializeTokens = () => {
     lookupToken().then((result) => {
         authToken.access_token = 'Bearer ' + result.access_token;
-        authToken.token_created = result.updatedAt;
+        authToken.updatedAt = result.updatedAt;
     });
 };
 
@@ -104,4 +104,15 @@ const refreshToken = () => {
         });
 };
 
-module.exports = {authToken, refreshToken, getToken, initializeTokens};
+const validateTokenIsFresh = () => {
+
+    if (authToken.updatedAt === undefined || authToken.updatedAt === null) {
+        return false;
+    }
+
+    let diff = ( Date.now() - authToken.updatedAt ) / 60000; // Get the difference in minutes
+
+    return (diff<= 10)
+};
+
+module.exports = {authToken, refreshToken, getToken, initializeTokens, validateTokenIsFresh};
