@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 mongoose.set('useFindAndModify', false);
 mongoose.set('useNewUrlParser', true);
