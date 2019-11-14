@@ -63,4 +63,4 @@ typings/
 .next
 
 # intellij IDE
-.idea/*
+/.idea/
