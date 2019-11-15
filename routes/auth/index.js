@@ -77,7 +77,7 @@ const initializeTokens = () => {
  * Builds request structure for requesting a new token through first time authentication
  * Currently login must be completed manually through the browser for the redirect
  */
-const getToken = async (oAuthCode) => {
+const newAccessToken = async (oAuthCode) => {
     options.data.grant_type = 'authorization_code';
     options.data.code = oAuthCode;
     await requestToken();
@@ -113,4 +113,4 @@ const validateTokenIsFresh = () => {
     return (diff<= 10)
 };
 
-module.exports = {authToken, refreshToken, getToken, initializeTokens, validateTokenIsFresh};
+module.exports = {authToken, refreshToken, newAccessToken, initializeTokens, validateTokenIsFresh};

@@ -11,7 +11,7 @@ oAuthToken.initializeTokens();*/
 // redirect uri
 app.get('/auth/newtoken', (req, res) => {
   console.log('New request');
-  oAuthToken.getToken(req.query.code)
+  oAuthToken.newAccessToken(req.query.code)
       .then(() => res.end())
       .catch(err => res.end(err))
 });
