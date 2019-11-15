@@ -4,15 +4,15 @@
   "private": true,
   "main": "app.js",
   "scripts": {
-    "start": "nodemon ./app.js --exec babel-node -e js",
+    "start": "nodemon bin/www --exec babel-node -e js",
     "eslint": "eslint",
-    "debug": "set DEBUG=express:* & nodemon ./app.js --exec babel-node -e js",
+    "debug": "set DEBUG=tradingapi:*  & nodemon bin/www --exec babel-node -e js",
     "test": "mocha"
   },
   "dependencies": {
     "axios": "^0.19.0",
     "cookie-parser": "~1.4.4",
-    "debug": "~2.6.9",
+    "debug": "^2.6.9",
     "express": "^4.17.1",
     "http-errors": "~1.6.3",
     "mongoose": "^5.6.9",
