@@ -4,10 +4,14 @@ const querystring = require('querystring');
 const {authSchema} = require('../../model/authModel');
 const config = require('../../config');
 
-// connect to auth collection
+/**
+ * connect to auth collection
+ */
 const tdauths = mongoose.model('tdauths', authSchema);
 
-// object for auth post request
+/**
+ *  object for auth post request
+ */
 const options = {
     data: {
         'access_type': 'offline',
@@ -21,9 +25,9 @@ const authToken = {
     updatedAt: null
 };
 
-/*
-    Function for requesting a new or refreshed token
-        Stores the returned Access and Refresh tokens in mongo db
+/**
+ * Function for requesting a new or refreshed token
+ * Stores the returned Access and Refresh tokens in mongo db
 */
 const requestToken = async () => {
     let data = querystring.stringify(options.data);
@@ -78,9 +82,9 @@ const initializeTokens = () => {
     });
 };
 
-/*
-    Builds request structure for requesting a new token through first time authentication
-        Currently login must be completed manually through the browser for the redirect
+/**
+ * Builds request structure for requesting a new token through first time authentication
+ * Currently login must be completed manually through the browser for the redirect
  */
 const getToken = async (oAuthCode) => {
     options.data.grant_type = 'authorization_code';
@@ -88,7 +92,9 @@ const getToken = async (oAuthCode) => {
     await requestToken();
 };
 
-//    Builds request structure for requesting a new token using a refresh token
+/**
+ * Builds request structure for requesting a new token using a refresh token
+ */
 const refreshToken = () => {
     tdauths.find({"_id": "1"}, 'refresh_token')
         .then( (queryResult) => {
@@ -104,8 +110,11 @@ const refreshToken = () => {
         });
 };
 
+/**
+ * Validate that the access token is fresh within the last 10 minutes
+ * @returns {boolean}
+ */
 const validateTokenIsFresh = () => {
-
     if (authToken.updatedAt === undefined || authToken.updatedAt === null) {
         return false;
     }
