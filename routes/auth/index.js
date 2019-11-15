@@ -32,14 +32,9 @@ const authToken = {
 const requestToken = async () => {
     let data = querystring.stringify(options.data);
 
-    axios
-        .request({
-            url: 'https://api.tdameritrade.com/v1/oauth2/token',
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            data: data,
+    axios.post('https://api.tdameritrade.com/v1/oauth2/token',
+        data, {
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         })
         .then( async (oAuthReply) => {
             let currentTime = Date.now();
@@ -56,12 +51,8 @@ const requestToken = async () => {
 
             await tdauths.findOneAndUpdate({"_id":"1"}, writeDB, { new: true, upsert: true});
         })
-        .then( () => {
-            console.log(`Token updated in DB`);
-        })
-        .catch( (err) => {
-            console.log(err);
-        });
+        .then( () => console.log(`Token updated in DB`))
+        .catch( (err) => console.log(err));
 };
 
 const lookupToken = () => {
@@ -102,12 +93,10 @@ const refreshToken = () => {
             options.data.refresh_token = queryResult[0].refresh_token;
             options.data.code = '';
             requestToken()
-                .then(() => { console.log(`Token Refreshed`); })
-                .catch( (err) => { console.log(err); })
+                .then( () =>  console.log(`Token Refreshed`) )
+                .catch( (err) =>  console.log(err) )
         })
-        .catch( (err) => {
-            console.log(err);
-        });
+        .catch( (err) => console.log(err) );
 };
 
 /**
