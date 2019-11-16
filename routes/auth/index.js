@@ -1,6 +1,7 @@
 const axios = require ('axios');
 const mongoose = require('mongoose');
 const querystring = require('querystring');
+const debug = require('debug')('tradingapi:routes:authToken');
 const {authSchema} = require('../../model/authModel');
 const config = require('../../config');
 
@@ -74,6 +75,30 @@ const initializeTokens = () => {
 };
 
 /**
+ * Return a fresh token
+ *
+ */
+const getToken = () => {
+    return new Promise((resolve, reject) => {
+        module.exports.validateTokenIsFresh()
+            .then( async (isTokenFresh) => {
+                if( isTokenFresh ){
+                    debug(`Access Token: ${authToken.access_token}`);
+                    resolve(authToken.access_token)
+                } else {
+                    console.log('refreshing token');
+                    await module.exports.refreshToken();
+                    resolve(authToken.access_token)
+                }
+            })
+            .catch(() => {
+                debug(`Token was invalid`);
+                reject('Error getting token')
+            });
+    });
+};
+
+/**
  * Builds request structure for requesting a new token through first time authentication
  * Currently login must be completed manually through the browser for the redirect
  */
@@ -101,16 +126,22 @@ const refreshToken = () => {
 
 /**
  * Validate that the access token is fresh within the last 10 minutes
- * @returns {boolean}
+ * @returns {Promise<Boolean>}
  */
 const validateTokenIsFresh = () => {
-    if (authToken.updatedAt === undefined || authToken.updatedAt === null) {
-        return false;
-    }
+    return new Promise((resolve, reject) => {
+        if (authToken.updatedAt === undefined || authToken.updatedAt === null) {
+            return resolve(false);
+        }
 
-    let diff = ( Date.now() - authToken.updatedAt ) / 60000; // Get the difference in minutes
+        let diff = (Date.now() - authToken.updatedAt) / 60000; // Get the difference in minutes
 
-    return (diff<= 10)
+        if(diff <= 10) {
+            return resolve(true);
+        } else {
+            return resolve(false);
+        }
+    });
 };
 
-module.exports = {authToken, refreshToken, newAccessToken, initializeTokens, validateTokenIsFresh};
+module.exports = {authToken, getToken, refreshToken, newAccessToken, initializeTokens, validateTokenIsFresh};
