@@ -29,11 +29,9 @@ Promise.resolve()
       return mongoose.connect(config.mongodb);
     })
     .then(() => {
-      debug('mongoose running...');
+      debug('mongoose connected');
     })
     .then(() => {
-      debug('mongoose connected');
-
       server.listen(port);
       server.on('error', onError);
       server.on('listening', onListening);
