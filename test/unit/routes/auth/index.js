@@ -7,7 +7,7 @@ chai.use(sinonChai);
 
 describe('Auth Module', function() {
 
-    context('Validate Token is fresh', function() {
+    context('Validate Token', function() {
 
         it('should return false when token is older than 10 minutes', function(done) {
             oAuthToken.authToken.updatedAt = Date.parse('2019-11-10 14:03:55.985Z');
@@ -84,7 +84,14 @@ describe('Auth Module', function() {
 
             refreshTokenStub.callsFake(function fakefn() {
                 oAuthToken.authToken.access_token = 'Refreshed Token';
+
+                return new Promise((resolve, reject) => {
+                    resolve();
+                })
             });
+
+            oAuthToken.authToken.access_token
+                .should.not.equal('Refreshed Token');
 
             oAuthToken.getToken()
                 .then( token => {
