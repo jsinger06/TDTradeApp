@@ -4,6 +4,7 @@ const querystring = require('querystring');
 const debug = require('debug')('tradingapi:routes:authToken');
 const {authSchema} = require('../../model/authModel');
 const config = require('../../config');
+const authAPI = require('./api');
 
 /**
  * connect to auth collection
@@ -123,29 +124,45 @@ const newAccessToken = async (oAuthCode) => {
 };
 
 /**
- * Builds request structure for requesting a new token using a refresh token
+ * Requests new token
+ *      cache new access_token
+ *      Store new token data in DB
  * @returns {Promise<void>}
+ * todo: implement cacheAndStore function
+ * todo: implement authAPI for newToken request
+ * todo: clean up RequestToken request in this module
  */
 const refreshToken = () => {
     debug(`start refreshToken`);
     return new Promise((resolve, reject) => {
         tdauths.find({"_id": "1"}, 'refresh_token')
             .then((queryResult) => {
-                options.data.grant_type = 'refresh_token';
-                options.data.refresh_token = queryResult[0].refresh_token;
-                options.data.code = '';
-                requestToken()
-                    .then(() => {
-                        debug('token refreshed');
-                        resolve();
+                authAPI.requestToken('refreshToken', queryResult[0].refresh_token )
+                    .then(async (result) => {
+                        let currentTime = Date.now();
+
+                        authToken.updatedAt = currentTime;
+                        authToken.access_token = 'Bearer ' + result.access_token;
+
+                        let writeDB = {
+                            "_id": '1',
+                            "access_token": result.access_token,
+                            "refresh_token": result.refresh_token,
+                            'updatedAt': currentTime
+                        };
+
+                        await tdauths.findOneAndUpdate({"_id": "1"}, writeDB, {new: true, upsert: true});
                     })
-                    .catch((err) => console.log(err))
+                    .catch((err) => {
+                        console.log(err);
+                        reject(err);
+                    });
             })
             .catch((err) => {
                 console.log(err);
                 reject(err);
             });
-    })
+    });
 };
 
 /**
