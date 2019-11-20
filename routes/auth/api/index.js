@@ -6,28 +6,26 @@ const config = require('../../../config');
 /**
  *  object for auth post request
  */
-const options = {
-    data: {
+const requestData = {
         'access_type': 'offline',
         'client_id': config.acct.client_id,
         'redirect_uri': config.acct.redirect_uri
-    }
 };
 
 /**
  *  Sets the required data for the JWT Token request
  * @param requestType - newToken or refreshToken
- * @param requestData - data to include in the request newToken=oAuthCode, refreshToken=refresh_token
+ * @param reqData - data to include in the request newToken=oAuthCode, refreshToken=refresh_token
  */
-const setOptions = (requestType, requestData) => {
+const setOptions = (requestType, reqData) => {
     if(requestType === 'newToken'){
-        options.data.grant_type = 'authorization_code';
-        options.data.code = requestData;
-        options.data.refresh_token = ''
+        requestData.grant_type = 'authorization_code';
+        requestData.code = reqData;
+        requestData.refresh_token = ''
     } else if (requestType === 'refreshToken') {
-        options.data.grant_type = 'refresh_token';
-        options.data.refresh_token = requestData;
-        options.data.code = '';
+        requestData.grant_type = 'refresh_token';
+        requestData.refresh_token = reqData;
+        requestData.code = '';
     }
 
 };
@@ -36,14 +34,14 @@ const setOptions = (requestType, requestData) => {
  * Function for requesting a new or refreshed token
  * Stores the returned Access and Refresh tokens in mongo db
  * @param requestType - Passed to setOptions
- * @param requestData - Passed to setOptions
+ * @param reqData - Passed to setOptions
  * @returns {Promise<Object>}
  */
-const requestToken = (requestType, requestData) => {
+const requestToken = (requestType, reqData) => {
 
-    setOptions(requestType, requestData);
+    setOptions(requestType, reqData);
 
-    let data = querystring.stringify(options.data);
+    let data = querystring.stringify(requestData);
 
     return new Promise((resolve, reject) => {
         return axios.post('https://api.tdameritrade.com/v1/oauth2/token',

@@ -1,9 +1,6 @@
-const axios = require ('axios');
 const mongoose = require('mongoose');
-const querystring = require('querystring');
 const debug = require('debug')('tradingapi:routes:authToken');
 const {authSchema} = require('../../model/authModel');
-const config = require('../../config');
 const authAPI = require('./api');
 
 /**
@@ -11,61 +8,9 @@ const authAPI = require('./api');
  */
 const tdauths = mongoose.model('tdauths', authSchema);
 
-/**
- *  object for auth post request
- */
-const options = {
-    data: {
-        'access_type': 'offline',
-        'client_id': config.acct.client_id,
-        'redirect_uri': config.acct.redirect_uri
-    }
-};
-
 const authToken = {
     access_token: null,
     updatedAt: null
-};
-
-/**
- * Function for requesting a new or refreshed token
- * Stores the returned Access and Refresh tokens in mongo db
- * @returns {Promise<Object>}
- */
-const requestToken = async () => {
-    debug(`start requestToken`);
-    let data = querystring.stringify(options.data);
-
-    return new Promise((resolve, reject) => {
-        axios.post('https://api.tdameritrade.com/v1/oauth2/token',
-            data, {
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-            })
-            .then(async (oAuthReply) => {
-                debug(`cache and store token`);
-                let currentTime = Date.now();
-
-                authToken.updatedAt = currentTime;
-                authToken.access_token = 'Bearer ' + oAuthReply.data.access_token;
-
-                let writeDB = {
-                    "_id": '1',
-                    "access_token": oAuthReply.data.access_token,
-                    "refresh_token": oAuthReply.data.refresh_token,
-                    'updatedAt': currentTime
-                };
-
-                await tdauths.findOneAndUpdate({"_id": "1"}, writeDB, {new: true, upsert: true});
-            })
-            .then(() => {
-                console.log(`Token updated in DB`);
-                resolve(authToken);
-            })
-            .catch((err) => {
-                console.log(err);
-                reject(err);
-            })
-    })
 };
 
 const lookupToken = () => {
@@ -83,6 +28,85 @@ const initializeTokens = () => {
     lookupToken().then((result) => {
         authToken.access_token = 'Bearer ' + result.access_token;
         authToken.updatedAt = result.updatedAt;
+    });
+};
+
+/**
+ * Cache the access_token for use and store the refresh_token and access_token in the db
+ * @param resData - Object containing token data
+ * @returns {Promise<void>}
+ */
+const cacheAndStoreToken = ( resData ) => {
+    debug(`starting cacheAndStoreToken`);
+    return new Promise((resolve, reject) => {
+        let currentTime = Date.now();
+
+        authToken.updatedAt = currentTime;
+        authToken.access_token = 'Bearer ' + resData.access_token;
+
+        let writeDB = {
+            "_id": '1',
+            "access_token": resData.access_token,
+            "refresh_token": resData.refresh_token,
+            'updatedAt': currentTime
+        };
+
+        tdauths.findOneAndUpdate({"_id": "1"}, writeDB, {new: true, upsert: true})
+            .then(() => {
+                debug(`token stored to DB`);
+                resolve();
+            } )
+            .catch((err) => {
+                console.log(err);
+                reject(err);
+            });
+    });
+};
+
+/**
+ * Requests new token using oAuthCode provided to redirect url
+ *      call cacheAndStoreToken to save token data
+ */
+const newAccessToken =  (oAuthCode) => {
+    return new Promise((resolve, reject) => {
+        authAPI.requestToken('newToken', oAuthCode)
+            .then((result) => {
+                debug(`storing token`);
+                cacheAndStoreToken(result)
+                    .then(() => resolve())
+                    .catch((err) => {
+                        console.log(err);
+                        reject(err);
+                    });
+            });
+    });
+};
+
+/**
+ * Requests new token using stored refresh token
+ *      call cacheAndStoreToken to save token data
+ * @returns {Promise<void>}
+ */
+const refreshToken = () => {
+    debug(`start refreshToken`);
+    return new Promise((resolve, reject) => {
+        tdauths.find({"_id": "1"}, 'refresh_token')
+            .then((queryResult) => {
+                authAPI.requestToken('refreshToken', queryResult[0].refresh_token )
+                    .then((result) => {
+                        debug(`storing token`);
+                        cacheAndStoreToken(result)
+                            .then(() => resolve() );
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        reject(err);
+                    });
+            })
+            .catch((err) => {
+                console.log(err);
+                reject(err);
+            });
     });
 };
 
@@ -109,58 +133,6 @@ const getToken = () => {
             .catch(() => {
                 debug(`Token was invalid`);
                 reject('Error getting token');
-            });
-    });
-};
-
-/**
- * Builds request structure for requesting a new token through first time authentication
- * Currently login must be completed manually through the browser for the redirect
- */
-const newAccessToken = async (oAuthCode) => {
-    options.data.grant_type = 'authorization_code';
-    options.data.code = oAuthCode;
-    await requestToken();
-};
-
-/**
- * Requests new token
- *      cache new access_token
- *      Store new token data in DB
- * @returns {Promise<void>}
- * todo: implement cacheAndStore function
- * todo: implement authAPI for newToken request
- * todo: clean up RequestToken request in this module
- */
-const refreshToken = () => {
-    debug(`start refreshToken`);
-    return new Promise((resolve, reject) => {
-        tdauths.find({"_id": "1"}, 'refresh_token')
-            .then((queryResult) => {
-                authAPI.requestToken('refreshToken', queryResult[0].refresh_token )
-                    .then(async (result) => {
-                        let currentTime = Date.now();
-
-                        authToken.updatedAt = currentTime;
-                        authToken.access_token = 'Bearer ' + result.access_token;
-
-                        let writeDB = {
-                            "_id": '1',
-                            "access_token": result.access_token,
-                            "refresh_token": result.refresh_token,
-                            'updatedAt': currentTime
-                        };
-
-                        await tdauths.findOneAndUpdate({"_id": "1"}, writeDB, {new: true, upsert: true});
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                        reject(err);
-                    });
-            })
-            .catch((err) => {
-                console.log(err);
-                reject(err);
             });
     });
 };
