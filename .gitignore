@@ -64,3 +64,6 @@ typings/
 
 # intellij IDE
 /.idea/
+
+#sandbox modules
+*sandbox*
