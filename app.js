@@ -4,10 +4,6 @@ const quotes = require('./routes/quotes');
 
 const app = express();
 
-/*todo: figure out where to load oAuthToken
-load access token on start up
-oAuthToken.initializeTokens();*/
-
 // redirect uri
 app.get('/auth/newtoken', (req, res) => {
   console.log('New request');
@@ -25,7 +21,16 @@ app.get('/auth/refresh', (req, res) => {
 
 app.get('/quote/', (req, res) => {
     console.log(`Symbol List: ${req.query.symbolList}`);
-    quotes.requestQuote(req.query.symbolList, res);
+    oAuthToken.getToken()
+        .then((token) => {
+            quotes.requestQuote(token, req.query.symbolList)
+                .then((quoteData) => {
+                    res.json(quoteData);
+                })
+                .catch((err) => {
+                    res.json(err);
+            });
+        });
 });
 
 module.exports = app;
