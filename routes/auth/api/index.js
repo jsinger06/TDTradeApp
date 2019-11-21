@@ -1,15 +1,15 @@
 const axios = require ('axios');
 const querystring = require('querystring');
 const debug = require('debug')('tradingapi:api:auth');
-const config = require('../../../config');
+const { devAcct } = require('../../../config');
 
 /**
  *  object for auth post request
  */
 const requestData = {
         'access_type': 'offline',
-        'client_id': config.acct.client_id,
-        'redirect_uri': config.acct.redirect_uri
+        'client_id': devAcct.client_id,
+        'redirect_uri': devAcct.redirect_uri
 };
 
 /**
@@ -41,11 +41,11 @@ const requestToken = (requestType, reqData) => {
 
     setOptions(requestType, reqData);
 
-    let data = querystring.stringify(requestData);
-
     return new Promise((resolve, reject) => {
-        return axios.post('https://api.tdameritrade.com/v1/oauth2/token',
-            data, {
+        return axios.post(
+            'https://api.tdameritrade.com/v1/oauth2/token',
+            querystring.stringify(requestData),
+            {
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             })
             .then((oAuthReply) => {

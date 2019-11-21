@@ -1,19 +1,18 @@
 const axios = require ('axios');
 const mongoose = require('mongoose');
-const {authToken} = require('../auth');
-const config = require('../../config');
+const { tradeAcct } = require('../../config');
 const { acctSchema } = require('../../model/acctModel');
 
 // connect to auth collection
 const account = mongoose.model('account', acctSchema);
 
-const getAccount = () => {
+const getAccount = (token) => {
     axios
-        .request({
-            url: 'https://api.tdameritrade.com/v1/accounts/' + config.acct.num,
+        .get({
+            url: 'https://api.tdameritrade.com/v1/accounts/' + tradeAcct.num,
             method: 'GET',
             headers: {
-                'Authorization': authToken.access_token,
+                'Authorization': token,
             },
             params: {
                 fields: 'positions,orders'
@@ -25,7 +24,7 @@ const getAccount = () => {
             let writeDB = {
                 roundTrips: res.data.securitiesAccount.roundTrips || 0
             };
-            await account.findOneAndUpdate({_id: config.acct.userName}, writeDB, { new: true, upsert: true});
+            await account.findOneAndUpdate({_id: tradeAcct.userName}, writeDB, { new: true, upsert: true});
         })
         .catch((error) => {
             console.log(error);

@@ -1,5 +1,5 @@
 const axios = require ('axios');
-const config = require('../../config');
+const {devAcct} = require('../../config');
 const debug = require('debug')('tradingapi:routes:quotes');
 
 
@@ -14,7 +14,7 @@ const requestQuote = (token,symbols) => {
                     'Authorization': token,
                 },
                 params: {
-                    apikey: config.acct.apikey,
+                    apikey: devAcct.apikey,
                     symbol: symbols //symbol hardcoded for testing - use symbols parameter
                 }
             })

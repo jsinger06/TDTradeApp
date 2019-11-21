@@ -4,7 +4,7 @@ const app = require('../app');
 const debug = require('debug')('tradingapi:server');
 const https = require('https');
 const mongoose = require('mongoose');
-const config = require('../config');
+const { mongodb } = require('../config');
 
 //Load SSL certificate and private key from files
 const privateKey  = fs.readFileSync('./cert/key.pem', 'utf8');
@@ -26,7 +26,7 @@ const server = https.createServer(credentials, app);
 Promise.resolve()
     .then(() => {
       debug('mongoose opening...');
-      return mongoose.connect(config.mongodb);
+      return mongoose.connect(mongodb);
     })
     .then(() => {
       debug('mongoose connected');
