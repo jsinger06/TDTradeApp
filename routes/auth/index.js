@@ -39,12 +39,12 @@ const initializeTokens = () => {
 const cacheAndStoreToken = ( resData ) => {
     debug(`starting cacheAndStoreToken`);
     return new Promise((resolve, reject) => {
-        let currentTime = Date.now();
+        const currentTime = Date.now();
 
         authToken.updatedAt = currentTime;
         authToken.access_token = 'Bearer ' + resData.access_token;
 
-        let writeDB = {
+        const writeDB = {
             "_id": '1',
             "access_token": resData.access_token,
             "refresh_token": resData.refresh_token,
@@ -147,13 +147,10 @@ const validateTokenIsFresh = () => {
             return resolve(false);
         }
 
-        let diff = (Date.now() - authToken.updatedAt) / 60000; // Get the difference in minutes
+        const diff = (Date.now() - authToken.updatedAt) / 60000; // Get the difference in minutes
 
-        if(diff <= 10) {
-            return resolve(true);
-        } else {
-            return resolve(false);
-        }
+        return diff <= 10 ? resolve(true) : resolve(false);
+        
     });
 };
 

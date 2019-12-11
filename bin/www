@@ -5,6 +5,7 @@ const debug = require('debug')('tradingapi:server');
 const https = require('https');
 const mongoose = require('mongoose');
 const { mongodb } = require('../config');
+const oAuthToken = require('../routes/auth');
 
 //Load SSL certificate and private key from files
 const privateKey  = fs.readFileSync('./cert/key.pem', 'utf8');

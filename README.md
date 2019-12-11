@@ -1,5 +1,17 @@
 # TDTradeApp_Public
 
+# Motivation
+
+# Build Status
+
+# Tech
+
+# Installation
+
+# API Reference
+
+# Tests
+
 This project is being used for building my skillset with the MERN stack. I am using TD Ameritrade since I have an existing account and investing is an interest of mine.
 
 This is a work in progress where the opportunity to do development is generally limited to approximately 1 hour a day. In addition to this project I have taken online training through LinkedIn Learning. This project does not currently represent my full skill set with javascript/node.
