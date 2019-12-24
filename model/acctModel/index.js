@@ -11,7 +11,7 @@ const acctSchema = new Schema({
     _id: {
         type: String,
         required: true,
-        default: config.acct.userName
+        default: config.tradeAcct.userName
     },
     roundTrips: {
         type: Number,

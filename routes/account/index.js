@@ -7,20 +7,18 @@ const { acctSchema } = require('../../model/acctModel');
 const account = mongoose.model('account', acctSchema);
 
 const getAccount = (token) => {
-    axios
-        .get({
-            url: 'https://api.tdameritrade.com/v1/accounts/' + tradeAcct.num,
-            method: 'GET',
-            headers: {
+    return axios.get('https://api.tdameritrade.com/v1/accounts/' + tradeAcct.num,
+            {headers: {
                 'Authorization': token,
             },
             params: {
                 fields: 'positions,orders'
-            }
-        })
+            }}
+        )
         .then( async (res) => {
             console.log(res.data);
             console.log(`round Trips is ${res.data.securitiesAccount.roundTrips}`);
+            console.log(res.data.securitiesAccount.orderStrategies)
             let writeDB = {
                 roundTrips: res.data.securitiesAccount.roundTrips || 0
             };
