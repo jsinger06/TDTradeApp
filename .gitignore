@@ -67,3 +67,6 @@ typings/
 
 #sandbox modules
 *sandbox*
+
+#temporary
+views/
