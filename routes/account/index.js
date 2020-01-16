@@ -16,11 +16,21 @@ const getAccount = (token) => {
             }}
         )
         .then( async (res) => {
-            console.log(res.data);
-            console.log(`round Trips is ${res.data.securitiesAccount.roundTrips}`);
-            console.log(res.data.securitiesAccount.orderStrategies)
+            let acctResponse = res.data.securitiesAccount;
+
+            // console.log(`acctResponse value ${JSON.stringify(acctResponse, null, 2)}`);
+            console.log(JSON.stringify(acctResponse, null, 2));
+            console.log(`round Trips is ${acctResponse.roundTrips}`);
+            console.log(`positions: ${JSON.stringify(acctResponse.positions, null, 2)}`);
+            console.log(acctResponse.orderStrategies);
             let writeDB = {
-                roundTrips: res.data.securitiesAccount.roundTrips || 0
+                roundTrips: acctResponse.roundTrips || 0,
+                isInCall: acctResponse.initialBalances.isInCall,
+                marginBalance: acctResponse.initialBalances.marginBalance,
+                accountValue: acctResponse.initialBalances.accountValue,
+                longMarginValue: acctResponse.currentBalances.longMarginValue,
+                availableFundsNonMarginableTrade: acctResponse.currentBalances.availableFundsNonMarginableTrade,
+                buyingPower: acctResponse.currentBalances.buyingPower
             };
             await account.findOneAndUpdate({_id: tradeAcct.userName}, writeDB, { new: true, upsert: true});
         })
