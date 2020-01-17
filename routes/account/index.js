@@ -1,28 +1,19 @@
-const axios = require ('axios');
 const mongoose = require('mongoose');
 const { tradeAcct } = require('../../config');
 const { acctSchema } = require('../../model/acctModel');
+const acctAPI = require('./api/')
+const debug = require('debug')('tradingapi:routes:acct');
 
 // connect to auth collection
 const account = mongoose.model('account', acctSchema);
 
 const getAccount = (token) => {
-    return axios.get('https://api.tdameritrade.com/v1/accounts/' + tradeAcct.num,
-            {headers: {
-                'Authorization': token,
-            },
-            params: {
-                fields: 'positions,orders'
-            }}
-        )
+    return acctAPI.getAccountAPI(token)
         .then( async (res) => {
-            let acctResponse = res.data.securitiesAccount;
 
-            // console.log(`acctResponse value ${JSON.stringify(acctResponse, null, 2)}`);
-            console.log(JSON.stringify(acctResponse, null, 2));
-            console.log(`round Trips is ${acctResponse.roundTrips}`);
-            console.log(`positions: ${JSON.stringify(acctResponse.positions, null, 2)}`);
-            console.log(acctResponse.orderStrategies);
+            let acctResponse = res.securitiesAccount;
+
+            debug(`Account Response: ${JSON.stringify(acctResponse, null, 2)}`);
             let writeDB = {
                 roundTrips: acctResponse.roundTrips || 0,
                 isInCall: acctResponse.initialBalances.isInCall,
