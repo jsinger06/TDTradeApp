@@ -1,26 +1,12 @@
-const axios = require ('axios');
-const {devAcct} = require('../../config');
 const debug = require('debug')('tradingapi:routes:quotes');
-
+const quoteAPI = require('./api');
 
 const requestQuote = (token,symbols) => {
     debug(`start requestQuoteTemp`);
     return new Promise((resolve, reject) => {
-        axios
-            .request({
-                url: 'https://api.tdameritrade.com/v1/marketdata/quotes',
-                method: 'GET',
-                headers: {
-                    'Authorization': token,
-                },
-                params: {
-                    apikey: devAcct.apikey,
-                    symbol: symbols //symbol hardcoded for testing - use symbols parameter
-                }
-            })
+        quoteAPI.getQuoteAPI(token, symbols)
             .then((tdResponse) => {
-                console.log(tdResponse.data);
-                resolve(tdResponse.data);
+                resolve(tdResponse);
             })
             .catch((err) => {
                 console.log(err);
@@ -29,4 +15,4 @@ const requestQuote = (token,symbols) => {
     });
 };
 
-module.exports = {requestQuote};
+module.exports = { requestQuote };
