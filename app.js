@@ -1,7 +1,8 @@
 const express = require('express');
 const oAuthToken = require('./routes/auth');
 const quotes = require('./routes/quotes');
-const account = require('./routes/account')
+const account = require('./routes/account');
+const orders = require('./routes/order');
 
 const app = express();
 
@@ -20,7 +21,7 @@ app.get('/account', (req, res) => {
         });
   });
 
-// redirect uri
+// new token redirect uri
 app.get('/auth/newtoken', (req, res) => {
   console.log('New request');
   oAuthToken.newAccessToken(req.query.code)
@@ -35,6 +36,7 @@ app.get('/auth/refresh', (req, res) => {
   res.end();
 });
 
+// request quote
 app.get('/quote/', (req, res) => {
     console.log(`Symbol List: ${req.query.symbolList}`);
     oAuthToken.getToken()
@@ -46,6 +48,21 @@ app.get('/quote/', (req, res) => {
                 .catch((err) => {
                     res.json(err);
             });
+        });
+});
+
+// request orders
+app.get('/orders/', (req, res) => {
+    console.log(`Orders request`);
+    oAuthToken.getToken()
+        .then((token) => {
+            orders.getOrders(token)
+                .then((quoteData) => {
+                    res.json(quoteData);
+                })
+                .catch((err) => {
+                    res.json(err);
+                });
         });
 });
 
