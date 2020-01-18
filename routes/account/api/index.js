@@ -19,7 +19,7 @@ const getAccountAPI = (token) => {
                 debug(acctResponse.data);
                 resolve(acctResponse.data);
             })
-            .catch((error) => {
+            .catch( err => {
                 console.log(err);
                 reject(err);
             });
