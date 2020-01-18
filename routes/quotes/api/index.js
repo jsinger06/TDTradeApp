@@ -1,5 +1,5 @@
 const axios = require ('axios');
-const { devAcct } = require('../../config');
+const { devAcct } = require('../../../config');
 const debug = require('debug')('tradingapi:routes:quotesAPI');
 
 const getQuoteAPI = (token,symbols) => {
