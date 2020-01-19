@@ -1,11 +1,13 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const oAuthToken = require('./routes/auth');
 const quotes = require('./routes/quotes');
 const account = require('./routes/account');
 const orders = require('./routes/order');
+const watchlist = require('./routes/watchlist');
 
 const app = express();
-
+app.use(express.json());
 // account
 app.get('/account', (req, res) => {
     console.log('Account lookup request');
@@ -59,6 +61,36 @@ app.get('/orders/', (req, res) => {
             orders.getOrders(token)
                 .then((quoteData) => {
                     res.json(quoteData);
+                })
+                .catch((err) => {
+                    res.json(err);
+                });
+        });
+});
+
+// request watchlist
+app.get('/watchlist/', (req, res) => {
+    console.log(`get watchlist request`);
+    oAuthToken.getToken()
+        .then((token) => {
+            watchlist.getWatchlist(token)
+                .then((watchlistData) => {
+                    res.json(watchlistData);
+                })
+                .catch((err) => {
+                    res.json(err);
+                });
+        });
+});
+
+// create watchlist
+app.post('/watchlist/', (req, res) => {
+    console.log(`get watchlist request`);
+    oAuthToken.getToken()
+        .then((token) => {
+            watchlist.createWatchlist(token, req.body.watchlistName)
+                .then((watchlistData) => {
+                    res.json(watchlistData);
                 })
                 .catch((err) => {
                     res.json(err);
